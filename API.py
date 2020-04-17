@@ -5,8 +5,9 @@ app = Flask(__name__)
 
 @app.route('/getJson')
 def get_json():
-    json_data = jsonify(get_formatted_data(0))
-    return json_data
+    return "<h1> Heroku App Test </h1>"
+    # json_data = jsonify(get_formatted_data(0))
+    # return json_data
 
 # if __name__ == '__main__':
 #     app.run()
