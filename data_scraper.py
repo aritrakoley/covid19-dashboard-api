@@ -12,7 +12,7 @@ def get_sources():
     return data_sources
 
 def get_helplines():
-    helplines = { "helplines": [
+    helplines = [
         {
             "title": "WB Helpline 1",
             "phone": "033-24312600",
@@ -50,7 +50,6 @@ def get_helplines():
             "type": "Hospital"
         }
     ]
-    }
     
     return helplines
 
