@@ -67,10 +67,12 @@ def scrape(data_source):
     main_df.columns = columns
     for i in range(1, 4):
         main_df.iloc[:, i] = main_df.iloc[:, i].astype('int64')
+    
     return main_df
 
 def get_formatted_data(src_index):
     main_df = scrape(get_sources()[src_index])
+    main_df = main_df.sort_values(by='Confirmed', ascending=False)
     
     data_sources = get_sources()
     helplines = get_helplines()
