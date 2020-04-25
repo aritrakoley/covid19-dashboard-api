@@ -9,3 +9,6 @@ CORS(app)
 def get_data():
     json_data = jsonify(get_formatted_data(0))
     return json_data
+
+# if(__name__ == "__main__"):
+#     app.run()

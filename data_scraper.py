@@ -62,7 +62,7 @@ def scrape(data_source):
 
     page_table = page_html[ts:te]
 
-    main_df = pd.read_html(page_table)[0].iloc[:-3, 1:]
+    main_df = pd.read_html(page_table)[0].iloc[:-4, 1:]
     columns = ['State', 'Confirmed', 'Recovered', 'Deceased']
     main_df.columns = columns
     for i in range(1, 4):
@@ -100,10 +100,4 @@ def get_formatted_data(src_index):
 
     return data
 
-if __name__ == "__main__":
-    main_df = scrape(get_sources()[0])
-    json_data = make_json(0)
 
-    json.dump(json_data, open('json_data.json', 'w'))
-    print(main_df)
-    print(main_df.dtypes)
