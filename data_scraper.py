@@ -53,16 +53,18 @@ def get_helplines():
     
     return helplines
 
-
-
 def scrape(data_source):
     page_html = req.get(data_source['url']).text
+
     ts = page_html.find("<table")
-    te = page_html.find("</table>", ts) + 8
+    te = page_html.find("<td colspan", ts)
+    
+    tmp_html = page_html[ts:te]
+    te = tmp_html.rfind("</tr>") + 5
 
-    page_table = page_html[ts:te]
+    page_table = tmp_html[0:te] + "</table>"
 
-    main_df = pd.read_html(page_table)[0].iloc[:-4, 1:]
+    main_df = pd.read_html(page_table)[0].iloc[0:, 1:]
     columns = ['State', 'Confirmed', 'Recovered', 'Deceased']
     main_df.columns = columns
     for i in range(1, 4):
