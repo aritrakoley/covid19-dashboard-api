@@ -1,6 +1,8 @@
 import requests as req
 import pandas as pd
 import json
+import re
+
 
 def get_sources():
     data_sources = [
@@ -53,6 +55,9 @@ def get_helplines():
     
     return helplines
 
+def extract_num(s):
+    return re.findall(r'\d+', str(s))[0]
+
 def scrape(data_source):
     page_html = req.get(data_source['url']).text
 
@@ -67,8 +72,12 @@ def scrape(data_source):
     main_df = pd.read_html(page_table)[0].iloc[0:, 1:]
     columns = ['State', 'Confirmed', 'Recovered', 'Deceased']
     main_df.columns = columns
-    for i in range(1, 4):
-        main_df.iloc[:, i] = main_df.iloc[:, i].astype('int64')
+
+    #extract numbers from strings (eg: '119#')
+    for c in range(1, 4):
+        for r in range(0, main_df.shape[0]):
+            main_df.iloc[r, c] = extract_num(main_df.iloc[r, c])
+        main_df.iloc[:, c] =  main_df.iloc[:, c].astype('int64')
     
     return main_df
 
