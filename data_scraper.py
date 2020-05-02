@@ -79,6 +79,8 @@ def scrape(data_source):
             main_df.iloc[r, c] = extract_num(main_df.iloc[r, c])
         main_df.iloc[:, c] =  main_df.iloc[:, c].astype('int64')
     
+    main_df['Active'] = main_df['Confirmed'] - ( main_df['Recovered'] + main_df['Deceased'])
+    
     return main_df
 
 def get_formatted_data(src_index):
@@ -92,10 +94,12 @@ def get_formatted_data(src_index):
     confirmed = main_df['Confirmed'].to_list()
     recovered = main_df['Recovered'].to_list()
     deceased = main_df['Deceased'].to_list()
+    active = main_df['Active'].to_list() 
 
     total_confirmed = sum(confirmed)
     total_recovered = sum(recovered)
     total_deceased = sum(deceased)
+    total_active = sum(active)
 
     data = {
         'sources': data_sources,
@@ -104,9 +108,11 @@ def get_formatted_data(src_index):
         'confirmed': confirmed,
         'recovered': recovered,
         'deceased': deceased,
+        'active': active,
         'total_confirmed': total_confirmed,
         'total_recovered': total_recovered,
-        'total_deceased': total_deceased
+        'total_deceased': total_deceased,
+        'total_active': total_active
     }
 
     return data
