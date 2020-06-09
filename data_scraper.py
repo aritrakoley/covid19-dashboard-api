@@ -55,8 +55,9 @@ def get_helplines():
     
     return helplines
 
-def extract_num(s):
-    return re.findall(r'\d+', str(s))[0]
+def extract_num(s): # returns a string
+  nums = re.findall(r'\d+', str(s))
+  return int(nums[0]) if len(nums) > 0 else 0
 
 def scrape(data_source):
     page_html = req.get(data_source['url']).text
@@ -70,16 +71,19 @@ def scrape(data_source):
     page_table = tmp_html[0:te] + "</table>"
 
     main_df = pd.read_html(page_table)[0].iloc[0:, 1:]
-    columns = ['State', 'Confirmed', 'Recovered', 'Deceased']
+
+    columns = ['State', 'Active', 'Recovered', 'Deceased', 'Confirmed']
     main_df.columns = columns
 
-    #extract numbers from strings (eg: '119#')
-    for c in range(1, 4):
+    # Remove Rows with invalid values
+    valid =  (main_df['State'].notna()) & (main_df['Active'].notna()) & (main_df['Recovered'].notna()) & (main_df['Deceased'].notna()) & (main_df['Confirmed'].notna())
+    main_df = main_df[valid]
+    
+    # extract numbers from strings (eg: '119#')
+    for c in range(1, main_df.shape[1]):
         for r in range(0, main_df.shape[0]):
             main_df.iloc[r, c] = extract_num(main_df.iloc[r, c])
         main_df.iloc[:, c] =  main_df.iloc[:, c].astype('int64')
-    
-    main_df['Active'] = main_df['Confirmed'] - ( main_df['Recovered'] + main_df['Deceased'])
     
     return main_df
 
